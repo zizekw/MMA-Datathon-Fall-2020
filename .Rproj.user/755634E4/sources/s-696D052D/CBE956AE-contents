@@ -72,8 +72,9 @@ data_dist <- data %>%
 #### Items per order
 
 ```{r items/order}
-# data_numb_items <-
-data_dist %>% add_count(order_id, product_id) %>% summary()
+data_numb_items <- data_dist %>% group_by(order_id) %>% add_count(name = "products_per_order")
+
+summary(data_numb_items)
 ```
 
 
