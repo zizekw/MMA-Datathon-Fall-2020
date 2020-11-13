@@ -113,23 +113,58 @@ data_order_volume <- data_prod_volume %>% group_by(order_id) %>% mutate(order_vo
 data_order_weight <- data_order_volume %>% group_by(order_id) %>% mutate(order_weight = sum(product_weight_g))
 ```
 
+#### Delivery Time
+
+```{r}
+data_deliv <- data_order_weight %>% mutate(delivery_time = difftime(order_delivered_customer_date, order_purchase_timestamp, units = "days"))
+
+data_deliv$delivery_time <- as.numeric(data_deliv$delivery_time)
+```
+
+#### Seller prep time
+
+```{r}
+data_pickup <- data_deliv %>% mutate(pickup_time = difftime(order_delivered_carrier_date, order_purchase_timestamp, units = "days"))
+
+data_pickup$pickup_time <- as.numeric(data_pickup$pickup_time)
+```
+
+
 #### Save to Disk
 
 ```{r}
-data_final <- data_order_weight
-# data_order_weight <- data_order_weight %>% ungroup()
-# write_csv(x = data_order_weight, path = "C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_final.csv")
+data_final <- data_pickup %>% ungroup()
+write_csv(x = data_final, path = "C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_final.csv")
 ```
 
 
 ## Exploratory Data Analysis
 
+### Basic Summary
+
+```{r}
+summary(data_final)
+tmp <- data.frame(summary(data_final))
+write_csv(x = tmp, path = "C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_summary_table.csv")
+```
+
+
 ### Colinearity
 
 ```{r}
 # now we can create our corrplot
-data_numeric_only <- data_final %>% select_if(is.numeric)
+data_numeric_only <- data_final %>% ungroup() %>% select_if(is.numeric)
 M <- cor(data_numeric_only, use="pairwise.complete.obs")
 corrplot(M, method = "number", tl.col = "black", type = "upper")
+```
+
+
+## Modeling
+
+### Regression
+
+```{r}
+model = lm(formula = delivery_time ~ distance + products_per_order + LP + order_weight * order_volume, data = data_final)
+summary(model)
 ```
 

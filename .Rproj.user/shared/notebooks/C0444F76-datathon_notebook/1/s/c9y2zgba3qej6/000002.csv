@@ -1,0 +1,3 @@
+"0","data_pickup <- data_deliv %>% mutate(pickup_time = difftime(order_delivered_carrier_date, order_purchase_timestamp, units = ""days""))"
+"0",""
+"0","data_pickup$pickup_time <- as.numeric(data_pickup$pickup_time)"

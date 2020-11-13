@@ -1,2 +1,3 @@
-"0","data_order_weight <- data_order_weight %>% ungroup()"
-"0","write_csv(x = data_order_weight, path = ""C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_final.csv"")"
+"0","data_final <- data_pickup %>% ungroup()"
+"0","# data_order_weight <- data_order_weight %>% ungroup()"
+"0","write_csv(x = data_final, path = ""C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_final.csv"")"

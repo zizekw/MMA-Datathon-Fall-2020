@@ -1,0 +1,295 @@
+Var1,Var2,Freq
+,  order_id,Length:100196     
+,  order_id,Class :character  
+,  order_id,Mode  :character  
+,  order_id,NA
+,  order_id,NA
+,  order_id,NA
+,  order_id,NA
+,customer_id,Length:100196     
+,customer_id,Class :character  
+,customer_id,Mode  :character  
+,customer_id,NA
+,customer_id,NA
+,customer_id,NA
+,customer_id,NA
+,order_status,Length:100196     
+,order_status,Class :character  
+,order_status,Mode  :character  
+,order_status,NA
+,order_status,NA
+,order_status,NA
+,order_status,NA
+,order_purchase_timestamp,Min.   :2016-09-15 12:16:00  
+,order_purchase_timestamp,1st Qu.:2017-09-14 09:43:15  
+,order_purchase_timestamp,Median :2018-01-20 16:04:30  
+,order_purchase_timestamp,Mean   :2018-01-02 00:12:16  
+,order_purchase_timestamp,3rd Qu.:2018-05-05 21:12:30  
+,order_purchase_timestamp,Max.   :2018-08-29 15:00:00  
+,order_purchase_timestamp,NA
+,order_approved_at,Min.   :2016-09-15 12:16:00  
+,order_approved_at,1st Qu.:2017-09-14 15:58:45  
+,order_approved_at,Median :2018-01-20 23:10:00  
+,order_approved_at,Mean   :2018-01-02 11:34:06  
+,order_approved_at,3rd Qu.:2018-05-06 13:45:45  
+,order_approved_at,Max.   :2018-08-29 15:10:00  
+,order_approved_at,NA's   :14  
+,order_delivered_carrier_date,Min.   :2016-10-08 10:34:00  
+,order_delivered_carrier_date,1st Qu.:2017-09-18 17:04:15  
+,order_delivered_carrier_date,Median :2018-01-24 11:15:00  
+,order_delivered_carrier_date,Mean   :2018-01-05 05:34:04  
+,order_delivered_carrier_date,3rd Qu.:2018-05-08 14:45:00  
+,order_delivered_carrier_date,Max.   :2018-09-11 19:48:00  
+,order_delivered_carrier_date,NA's   :2  
+,order_delivered_customer_date,Min.   :2016-10-11 13:46:00  
+,order_delivered_customer_date,1st Qu.:2017-09-25 22:07:45  
+,order_delivered_customer_date,Median :2018-02-02 16:07:00  
+,order_delivered_customer_date,Mean   :2018-01-14 11:54:52  
+,order_delivered_customer_date,3rd Qu.:2018-05-15 23:31:30  
+,order_delivered_customer_date,Max.   :2018-10-17 13:22:00  
+,order_delivered_customer_date,NA's   :8  
+,order_estimated_delivery_date,Min.   :2016-10-04 00:00:00  
+,order_estimated_delivery_date,1st Qu.:2017-10-05 00:00:00  
+,order_estimated_delivery_date,Median :2018-02-16 00:00:00  
+,order_estimated_delivery_date,Mean   :2018-01-25 18:56:40  
+,order_estimated_delivery_date,3rd Qu.:2018-05-28 00:00:00  
+,order_estimated_delivery_date,Max.   :2018-10-25 00:00:00  
+,order_estimated_delivery_date,NA
+,customer_unique_id,Length:100196     
+,customer_unique_id,Class :character  
+,customer_unique_id,Mode  :character  
+,customer_unique_id,NA
+,customer_unique_id,NA
+,customer_unique_id,NA
+,customer_unique_id,NA
+,customer_zip_code_prefix,Min.   : 1003  
+,customer_zip_code_prefix,1st Qu.:11320  
+,customer_zip_code_prefix,Median :24416  
+,customer_zip_code_prefix,Mean   :35139  
+,customer_zip_code_prefix,3rd Qu.:59014  
+,customer_zip_code_prefix,Max.   :99980  
+,customer_zip_code_prefix,NA
+,customer_city,Length:100196     
+,customer_city,Class :character  
+,customer_city,Mode  :character  
+,customer_city,NA
+,customer_city,NA
+,customer_city,NA
+,customer_city,NA
+,customer_state,Length:100196     
+,customer_state,Class :character  
+,customer_state,Mode  :character  
+,customer_state,NA
+,customer_state,NA
+,customer_state,NA
+,customer_state,NA
+, customer_lat,Min.   :-36.60  
+, customer_lat,1st Qu.:-23.58  
+, customer_lat,Median :-22.92  
+, customer_lat,Mean   :-21.21  
+, customer_lat,3rd Qu.:-20.14  
+, customer_lat,Max.   : 42.18  
+, customer_lat,NA's   :273  
+, customer_lng,Min.   :-72.66  
+, customer_lng,1st Qu.:-48.11  
+, customer_lng,Median :-46.63  
+, customer_lng,Mean   :-46.19  
+, customer_lng,3rd Qu.:-43.64  
+, customer_lng,Max.   : -8.57  
+, customer_lng,NA's   :273  
+,   Quantity,Min.   : 1.0  
+,   Quantity,1st Qu.: 1.0  
+,   Quantity,Median : 1.0  
+,   Quantity,Mean   : 1.1  
+,   Quantity,3rd Qu.: 1.0  
+,   Quantity,Max.   :20.0  
+,   Quantity,NA
+, product_id,Length:100196     
+, product_id,Class :character  
+, product_id,Mode  :character  
+, product_id,NA
+, product_id,NA
+, product_id,NA
+, product_id,NA
+, seller_id,Length:100196     
+, seller_id,Class :character  
+, seller_id,Mode  :character  
+, seller_id,NA
+, seller_id,NA
+, seller_id,NA
+, seller_id,NA
+,shipping_limit_date,Min.   :2016-09-19 23:11:00  
+,shipping_limit_date,1st Qu.:2017-09-21 02:26:00  
+,shipping_limit_date,Median :2018-01-26 14:19:30  
+,shipping_limit_date,Mean   :2018-01-08 13:37:18  
+,shipping_limit_date,3rd Qu.:2018-05-11 01:31:15  
+,shipping_limit_date,Max.   :2020-04-09 22:35:00  
+,shipping_limit_date,NA
+,    Price,Min.   :   0.85  
+,    Price,1st Qu.:  40.00  
+,    Price,Median :  78.00  
+,    Price,Mean   : 123.75  
+,    Price,3rd Qu.: 139.00  
+,    Price,Max.   :6735.00  
+,    Price,NA
+,freight_value,Min.   :  0.00  
+,freight_value,1st Qu.: 13.14  
+,freight_value,Median : 16.32  
+,freight_value,Mean   : 20.07  
+,freight_value,3rd Qu.: 21.19  
+,freight_value,Max.   :409.68  
+,freight_value,NA
+,seller_zip_code_prefix,Min.   : 1001  
+,seller_zip_code_prefix,1st Qu.: 6455  
+,seller_zip_code_prefix,Median :13603  
+,seller_zip_code_prefix,Mean   :24597  
+,seller_zip_code_prefix,3rd Qu.:29156  
+,seller_zip_code_prefix,Max.   :99730  
+,seller_zip_code_prefix,NA
+,seller_city,Length:100196     
+,seller_city,Class :character  
+,seller_city,Mode  :character  
+,seller_city,NA
+,seller_city,NA
+,seller_city,NA
+,seller_city,NA
+,seller_state,Length:100196     
+,seller_state,Class :character  
+,seller_state,Mode  :character  
+,seller_state,NA
+,seller_state,NA
+,seller_state,NA
+,seller_state,NA
+,  seller_lat,Min.   :-36.60  
+,  seller_lat,1st Qu.:-23.61  
+,  seller_lat,Median :-23.41  
+,  seller_lat,Mean   :-22.79  
+,  seller_lat,3rd Qu.:-21.76  
+,  seller_lat,Max.   : -2.54  
+,  seller_lat,NA's   :222  
+,  seller_lng,Min.   :-64.28  
+,  seller_lng,1st Qu.:-48.83  
+,  seller_lng,Median :-46.75  
+,  seller_lng,Mean   :-47.23  
+,  seller_lng,3rd Qu.:-46.51  
+,  seller_lng,Max.   :-34.84  
+,  seller_lng,NA's   :222  
+,product_category_name,Length:100196     
+,product_category_name,Class :character  
+,product_category_name,Mode  :character  
+,product_category_name,NA
+,product_category_name,NA
+,product_category_name,NA
+,product_category_name,NA
+,product_name_lenght,Min.   : 5.0  
+,product_name_lenght,1st Qu.:43.0  
+,product_name_lenght,Median :52.0  
+,product_name_lenght,Mean   :48.9  
+,product_name_lenght,3rd Qu.:57.0  
+,product_name_lenght,Max.   :76.0  
+,product_name_lenght,NA's   :1401  
+,product_description_lenght,Min.   :   4.0  
+,product_description_lenght,1st Qu.: 348.0  
+,product_description_lenght,Median : 603.0  
+,product_description_lenght,Mean   : 786.6  
+,product_description_lenght,3rd Qu.: 986.0  
+,product_description_lenght,Max.   :3992.0  
+,product_description_lenght,NA's   :1401  
+,product_photos_qty,Min.   : 1.000  
+,product_photos_qty,1st Qu.: 1.000  
+,product_photos_qty,Median : 2.000  
+,product_photos_qty,Mean   : 2.241  
+,product_photos_qty,3rd Qu.: 3.000  
+,product_photos_qty,Max.   :20.000  
+,product_photos_qty,NA's   :1401  
+,product_weight_g,Min.   :    0  
+,product_weight_g,1st Qu.:  300  
+,product_weight_g,Median :  700  
+,product_weight_g,Mean   : 2086  
+,product_weight_g,3rd Qu.: 1800  
+,product_weight_g,Max.   :40425  
+,product_weight_g,NA's   :16  
+,product_length_cm,Min.   :  7.00  
+,product_length_cm,1st Qu.: 18.00  
+,product_length_cm,Median : 25.00  
+,product_length_cm,Mean   : 30.07  
+,product_length_cm,3rd Qu.: 38.00  
+,product_length_cm,Max.   :105.00  
+,product_length_cm,NA's   :16  
+,product_height_cm,Min.   :  2.00  
+,product_height_cm,1st Qu.:  8.00  
+,product_height_cm,Median : 13.00  
+,product_height_cm,Mean   : 16.37  
+,product_height_cm,3rd Qu.: 20.00  
+,product_height_cm,Max.   :105.00  
+,product_height_cm,NA's   :16  
+,product_width_cm,Min.   :  6.00  
+,product_width_cm,1st Qu.: 15.00  
+,product_width_cm,Median : 20.00  
+,product_width_cm,Mean   : 23.03  
+,product_width_cm,3rd Qu.: 30.00  
+,product_width_cm,Max.   :118.00  
+,product_width_cm,NA's   :16  
+,    LP_ID,Min.   :1.000  
+,    LP_ID,1st Qu.:3.000  
+,    LP_ID,Median :3.000  
+,    LP_ID,Mean   :3.828  
+,    LP_ID,3rd Qu.:5.000  
+,    LP_ID,Max.   :5.000  
+,    LP_ID,NA
+,     LP,Length:100196     
+,     LP,Class :character  
+,     LP,Mode  :character  
+,     LP,NA
+,     LP,NA
+,     LP,NA
+,     LP,NA
+,   distance,Min.   :   0.0  
+,   distance,1st Qu.: 196.8  
+,   distance,Median : 457.8  
+,   distance,Mean   : 633.6  
+,   distance,3rd Qu.: 841.6  
+,   distance,Max.   :9229.3  
+,   distance,NA's   :496  
+,products_per_order,Min.   :1.000  
+,products_per_order,1st Qu.:1.000  
+,products_per_order,Median :1.000  
+,products_per_order,Mean   :1.089  
+,products_per_order,3rd Qu.:1.000  
+,products_per_order,Max.   :8.000  
+,products_per_order,NA
+,order_diff_time,Min.   :-188.975  
+,order_diff_time,1st Qu.:   6.448  
+,order_diff_time,Median :  12.039  
+,order_diff_time,Mean   :  11.285  
+,order_diff_time,3rd Qu.:  16.301  
+,order_diff_time,Max.   : 146.017  
+,order_diff_time,NA's   :8  
+,     late,Min.   :0.0000  
+,     late,1st Qu.:0.0000  
+,     late,Median :0.0000  
+,     late,Mean   :0.0798  
+,     late,3rd Qu.:0.0000  
+,     late,Max.   :1.0000  
+,     late,NA's   :8  
+,product_volume_cm,Min.   :   168  
+,product_volume_cm,1st Qu.:  2816  
+,product_volume_cm,Median :  6318  
+,product_volume_cm,Mean   : 15089  
+,product_volume_cm,3rd Qu.: 18000  
+,product_volume_cm,Max.   :296208  
+,product_volume_cm,NA's   :16  
+, order_volume,Min.   :    168  
+, order_volume,1st Qu.:   2880  
+, order_volume,Median :   6912  
+, order_volume,Mean   :  16275  
+, order_volume,3rd Qu.:  19656  
+, order_volume,Max.   :1476000  
+, order_volume,NA's   :16  
+, order_weight,Min.   :     0  
+, order_weight,1st Qu.:   300  
+, order_weight,Median :   700  
+, order_weight,Mean   :  2242  
+, order_weight,3rd Qu.:  1950  
+, order_weight,Max.   :154200  
+, order_weight,NA's   :16  

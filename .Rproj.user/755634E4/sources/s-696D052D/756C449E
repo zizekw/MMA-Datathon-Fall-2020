@@ -12,14 +12,14 @@
     "properties": {
         "expression": "data_final",
         "caption": "data_final",
-        "totalObservations": 100196,
-        "displayedObservations": 100196,
-        "variables": 42,
-        "cacheKey": "DC985C5F",
+        "totalObservations": "100196",
+        "displayedObservations": "100196",
+        "variables": "44",
+        "cacheKey": "DDDA581D",
         "object": "data_final",
         "environment": "",
-        "contentUrl": "grid_resource/gridviewer.html?env=&obj=data_final&cache_key=DC985C5F&max_cols=50",
-        "preview": 0
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=data_final&cache_key=DDDA581D&max_cols=50",
+        "preview": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1605295624,

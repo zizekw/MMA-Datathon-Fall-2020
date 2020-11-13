@@ -1,0 +1,6 @@
+"0","data_deliv <- data_order_weight %>% mutate(delivery_time = difftime(order_delivered_customer_date, order_purchase_timestamp, units = ""days""))"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"0","data_deliv$delivery_time <- as.numeric(data_deliv$delivery_time)"
