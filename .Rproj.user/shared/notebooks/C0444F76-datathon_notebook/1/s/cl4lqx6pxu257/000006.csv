@@ -1,0 +1,6 @@
+"0","data_dist <- data %>% "
+"0","  mutate(distance = acos(cos(NISTdegTOradian(90-customer_lat))*cos(NISTdegTOradian(90-seller_lat))+sin(NISTdegTOradian(90-customer_lat))*sin(NISTdegTOradian(90-seller_lat))*cos(NISTdegTOradian(customer_lng-seller_lng)))*6731)"
+"2","Problem with `mutate()` input `distance`.
+[34mi[39m NaNs produced
+[34mi[39m Input `distance` is `*...`."
+"2","NaNs produced"

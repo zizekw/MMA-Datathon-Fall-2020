@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(corrplot)
+library(NISTunits)
 ```
 
 ## Data Ingestion
@@ -48,11 +49,33 @@ data_all <- parana_orders %>%
 
 ### Derived Variables
 
+We need to derive some variables of interest
+
 1. Order Distance
 2. Number of items per order
 3. Dummy variable for late order
 4. Delivery difference
 5. Product volume --> Order volume
+
+```{r first}
+data <- data_all %>% filter(order_status == "delivered")
+```
+
+#### Distance
+Need to figure out how to handle NAs. There's 222 NAs for seller lat/long and 273 NAs for customer lat/long. So when I do the distance calculation without excluding them I end up with 496 NAs.
+
+```{r distance}
+data_dist <- data %>% 
+  mutate(distance = acos(cos(NISTdegTOradian(90-customer_lat))*cos(NISTdegTOradian(90-seller_lat))+sin(NISTdegTOradian(90-customer_lat))*sin(NISTdegTOradian(90-seller_lat))*cos(NISTdegTOradian(customer_lng-seller_lng)))*6731)
+```
+
+#### Items per order
+
+```{r items/order}
+# data_numb_items <-
+data_dist %>% add_count(order_id, product_id) %>% summary()
+```
+
 
 ## Exploratory Data Analysis
 
