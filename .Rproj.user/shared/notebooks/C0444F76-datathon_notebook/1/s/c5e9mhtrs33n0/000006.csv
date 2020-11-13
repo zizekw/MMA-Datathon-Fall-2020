@@ -1,0 +1,11 @@
+"0",""
+"0","# positive means that the "
+"0","data_deliv_diff <- data_numb_items %>% mutate(order_diff_time = difftime(order_estimated_delivery_date, order_delivered_customer_date, units = ""days""))"
+"0",""
+"0","data_deliv_diff$order_diff_time <- as.numeric()"
+"2","Error: Assigned data `value` must be compatible with existing data.
+[31mx[39m Existing data has 100196 rows.
+[31mx[39m Assigned data has 0 rows.
+[34mi[39m Only vectors of size 1 are recycled.
+[90mRun `rlang::last_error()` to see where the error occurred.[39m
+"

@@ -51,10 +51,10 @@ data_all <- parana_orders %>%
 
 We need to derive some variables of interest
 
-1. Order Distance
-2. Number of items per order
-3. Dummy variable for late order
-4. Delivery difference
+~1. Order Distance~
+~2. Number of items per order~
+~3. Dummy variable for late order~
+~4. Delivery difference~
 5. Product volume --> Order volume
 
 ```{r first}
@@ -77,6 +77,50 @@ data_numb_items <- data_dist %>% group_by(order_id) %>% add_count(name = "produc
 summary(data_numb_items)
 ```
 
+#### Difference between Estimate and Actual Delivery
+
+```{r delivery difference}
+
+# positive means that the order is early, negative late
+data_deliv_diff <- data_numb_items %>% mutate(order_diff_time = difftime(order_estimated_delivery_date, order_delivered_customer_date, units = "days"))
+
+data_deliv_diff$order_diff_time <- as.numeric(data_deliv_diff$order_diff_time)
+
+```
+
+
+#### Late Orders
+
+```{r}
+data_deliv_late <- data_deliv_diff %>% mutate(late = ifelse(order_diff_time < 0, 1, 0))
+```
+
+#### Product Volume
+
+```{r}
+data_prod_volume <- data_deliv_late %>% mutate(product_volume_cm = product_length_cm*product_height_cm*product_width_cm)
+```
+
+#### Order Volume
+
+```{r}
+data_order_volume <- data_prod_volume %>% group_by(order_id) %>% mutate(order_volume = sum(product_volume_cm))
+```
+
+#### Order Weight
+
+```{r}
+data_order_weight <- data_order_volume %>% group_by(order_id) %>% mutate(order_weight = sum(product_weight_g))
+```
+
+#### Save to Disk
+
+```{r}
+data_final <- data_order_weight
+# data_order_weight <- data_order_weight %>% ungroup()
+# write_csv(x = data_order_weight, path = "C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_final.csv")
+```
+
 
 ## Exploratory Data Analysis
 
@@ -84,7 +128,7 @@ summary(data_numb_items)
 
 ```{r}
 # now we can create our corrplot
-data_numeric_only <- data_all %>% select_if(is.numeric)
+data_numeric_only <- data_final %>% select_if(is.numeric)
 M <- cor(data_numeric_only, use="pairwise.complete.obs")
 corrplot(M, method = "number", tl.col = "black", type = "upper")
 ```

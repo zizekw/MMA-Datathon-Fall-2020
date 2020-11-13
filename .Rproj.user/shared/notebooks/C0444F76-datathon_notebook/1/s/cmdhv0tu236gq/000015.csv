@@ -1,0 +1,4 @@
+"0","# now we can create our corrplot"
+"0","data_numeric_only <- data_final %>% select_if(is.numeric)"
+"0","M <- cor(data_numeric_only, use=""pairwise.complete.obs"")"
+"0","corrplot(M, method = ""number"", tl.col = ""black"", type = ""upper"")"

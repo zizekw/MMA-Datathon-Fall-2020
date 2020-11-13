@@ -1,0 +1,1 @@
+"0","data_deliv_late <- data_deliv_diff %>% mutate(late = ifelse(order_diff_time < 0, 1, 0))"
