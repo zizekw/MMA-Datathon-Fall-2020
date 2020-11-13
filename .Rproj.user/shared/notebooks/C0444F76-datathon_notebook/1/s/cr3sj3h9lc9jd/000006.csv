@@ -1,0 +1,7 @@
+"0","data_all <- parana_orders %>% "
+"0","  left_join(parana_customers, by = ""customer_id"") %>%"
+"0","  left_join(parana_order_items, by = ""order_id"") %>% "
+"0","  left_join(parana_products, by = ""product_id"") %>%"
+"0","  left_join(Parana_LP, by = c(""customer_state"" = ""State_Served"")) "
+"0",""
+"0","write_csv(x = data_all, path = ""C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_all.csv"")"

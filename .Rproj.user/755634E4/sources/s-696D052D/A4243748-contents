@@ -1,0 +1,448 @@
+---
+title: "DT Bank Campaign Analysis (RSM8502 Project)"
+author: "Group 6"
+date: "28/10/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(corrplot)
+library(tidyverse)
+library(ROCR)
+library(Metrics)
+library(caret)
+library(fastDummies)
+library(plyr)
+library(blorr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import data, message=FALSE}
+bank_additional_full <- read_delim("data/bank-additional-full.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+data <- bank_additional_full
+```
+
+# Variable Definitions
+
+### General input attributes:
+age (numeric)
+
+job - type of job (categorical: "admin.","blue-collar","entrepreneur","housemaid","management","retired","self-employed","services","student","technician","unemployed","unknown")
+
+marital : marital status (categorical: "divorced","married","single","unknown"; note: "divorced" means divorced or widowed)
+
+education (categorical: "basic.4y","basic.6y","basic.9y","high.school","illiterate","professional.course","university.degree","unknown") 
+
+default: has credit in default? (categorical: "no","yes","unknown")
+
+housing: has housing loan? (categorical: "no","yes","unknown")
+
+loan: has personal loan? (categorical: "no","yes","unknown")
+
+### Input attributes related to the last contact of the current campaign:
+contact: contact communication type (categorical: "cellular","telephone")
+
+month: last contact month of year (categorical: "jan", "feb", "mar", ..., "nov", "dec")
+
+day_of_week: last contact day of the week (categorical: "mon","tue","wed","thu","fri")
+
+duration: last contact duration, in seconds (numeric). Important note: the duration variable is unknown before the sales call is finished
+
+### Historical attributes (campaign related):
+campaign: number of contacts performed during this campaign and for this client (numeric, includes last contact)
+
+pdays: number of days that passed by after the client was last contacted from a previous campaign (numeric; 999 means client was not previously contacted)
+
+previous: number of contacts performed before this campaign and for this client (numeric)
+
+poutcome: outcome of the previous marketing campaign (categorical: "failure","nonexistent","success")
+
+### Socio-economic context variables:
+emp.var.rate: employment variation rate - quarterly indicator (numeric)
+
+cons.price.idx: consumer price index - monthly indicator (numeric)     
+
+cons.conf.idx: consumer confidence index - monthly indicator (numeric)     
+
+euribor3m: euribor 3 month rate - daily indicator (numeric)
+
+nr.employed: number of employees - quarterly indicator (numeric)
+
+
+# Question 1
+
+## Question 1a
+Check for linear correlations between the input variables (numeric). We should also make a correction for `pdays` since many values are inputted as `999` and this may impact our colinearity assessment.
+
+```{r 1a}
+# remove non-numeric columns
+data_numeric_only <- data %>% select_if(is.numeric)
+
+# now we can create our corrplot
+M <- cor(data_numeric_only)
+corrplot(M, method = "number", tl.col = "black", type = "upper")
+```
+Yes, there are a few variables positively correlated with each other and a select few negatively correlated. Of note, `emp.var.rate` is positively correlated with `cons.price.idx`, `euribor3m`, and `nr.employed` >0.78 for each.
+
+## Question 1b
+
+`Jax input`
+
+## Question 1c
+```{r}
+# handle '999' placeholder for pdays
+# explor pdays column
+count(data$pdays)
+# change '999' to NA
+data$pdays[data$pdays == 999] = NA
+count(data$pdays)
+
+# change responde variable 'y' from yes/no to 1/0
+data$y = revalue(data$y, c("yes"=1))
+data$y = revalue(data$y, c("no"=0))
+data$y = as.numeric(data$y) 
+```
+
+```{r 1c}
+# Extract each group
+group1 = subset(data, select = c("age","job","marital","education","default","housing","loan", "y"))
+group2 = subset(data, select = c("contact","month","day_of_week","duration", "y"))
+group3 = subset(data, select = c("campaign","pdays","previous","poutcome", "y"))
+group4 = subset(data, select = c("emp.var.rate","cons.price.idx","cons.conf.idx","euribor3m","nr.employed"))
+outcome = subset(data, select = c("y"))
+
+glm_fit_group1 = glm(formula = y~ ., 
+          data = group1, family=binomial)
+summary(glm_fit_group1)
+blr_rsq_cox_snell(glm_fit_group1)
+
+glm_fit_group2 = glm(formula = y~ ., 
+          data = group2, family=binomial)
+summary(glm_fit_group2)
+blr_rsq_cox_snell(glm_fit_group2)
+
+glm_fit_group3 = glm(formula = y~ ., 
+          data = group3, family=binomial)
+summary(glm_fit_group3)
+blr_rsq_cox_snell(glm_fit_group3)
+
+data_categorical_only <- select_if(data, is.character)
+
+# Test independence by using Chi-square test)
+for(col in names(data_categorical_only)){
+  if (col != "y"){
+    test_data = subset(data, select = c(col, "y"))
+    print(table(test_data))
+    print(chisq.test(table(test_data)))
+  }
+}
+```
+
+
+## Question 1d
+
+## Question 2a
+```{r}
+# calculate R squre helper function
+R2<- function(model){
+    R2<- 1-(model$deviance/model$null.deviance)
+    return(R2)
+}
+```
+
+```{r}
+# create dummy variables for categorical variables
+glm_data = dummy_cols(data, select_columns = c('job', 'marital', 
+                                              'education', 'default', 'contact', 
+                                              'month', 'day_of_week', 'poutcome',
+                                              'housing', 'loan'),remove_selected_columns = TRUE)
+
+# remove dependent vairables that we dont want to include
+# remove Group 4 variables
+glm_data = subset(glm_data, select = -c(emp.var.rate, cons.price.idx, cons.conf.idx,euribor3m, nr.employed ))
+# remove "duration"
+glm_data = subset(glm_data, select = -c(duration))
+```
+
+## Fit 1
+Do regrssion use all numeric and categorical variables
+```{r}
+glm_data1 = glm_data
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data1))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data1)), size = smp_size)
+train = glm_data1[train_ind, ]
+test = glm_data1[-train_ind, ]
+
+# fit logistic regression model
+glm_fit1 = glm(formula = y~ ., 
+          data = train, family=binomial)
+summary(glm_fit1)
+blr_rsq_cox_snell(glm_fit1)
+```
+
+## Fit 2
+From the result, we can see 'pdays' is insiginificent, we can remove this factor based on backward elimination.
+```{r}
+glm_data2 = glm_data
+
+# remove pdays
+glm_data2 = subset(glm_data2, select = -c(pdays))
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data2))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data2)), size = smp_size)
+train = glm_data2[train_ind, ]
+test = glm_data2[-train_ind, ]
+
+# fit logistic regression model
+glm_fit2 = glm(formula = y~ ., 
+          data = train, family=binomial)
+summary(glm_fit2)
+blr_rsq_cox_snell(glm_fit2)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit2, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+```{r}
+#step(glm_fit2, direction = "backward")
+```
+
+## Fit 3
+housing has the largest p-value, exclude housing
+```{r}
+# pday removed
+glm_data3 = glm_data2
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data3))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data3)), size = smp_size)
+train = glm_data3[train_ind, ]
+test = glm_data3[-train_ind, ]
+
+# fit logistic regression model
+# exlude housing
+glm_fit3 = glm(formula = y~. -housing_no - housing_yes - housing_unknown, 
+          data = train, family=binomial)
+summary(glm_fit3)
+blr_rsq_cox_snell(glm_fit3)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit3, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+## Fit 4
+loan p-value get bigger.
+```{r}
+# pday removed
+glm_data4 = glm_data2
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data4))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data4)), size = smp_size)
+train = glm_data4[train_ind, ]
+test = glm_data4[-train_ind, ]
+
+# fit logistic regression model
+# exlude loan
+glm_fit4 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown, 
+          data = train, family=binomial)
+summary(glm_fit4)
+blr_rsq_cox_snell(glm_fit4)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit4, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+## Fit 5
+default standing out.
+```{r}
+# pday removed
+glm_data5 = glm_data2
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data5))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data5)), size = smp_size)
+train = glm_data5[train_ind, ]
+test = glm_data5[-train_ind, ]
+
+# fit logistic regression model
+# exlude housing, loan, default
+glm_fit5 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown
+               -default_no - default_yes - default_unknown, 
+          data = train, family=binomial)
+summary(glm_fit5)
+blr_rsq_cox_snell(glm_fit5)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit5, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+## Fit 6
+taking out marital
+```{r}
+# pday removed
+glm_data6 = glm_data2
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data6))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data6)), size = smp_size)
+train = glm_data6[train_ind, ]
+test = glm_data6[-train_ind, ]
+
+# fit logistic regression model
+# exlude housing, loan, default, marital
+glm_fit6 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown
+               -default_no - default_yes - default_unknown
+               -marital_divorced - marital_married - marital_single - marital_unknown,
+          data = train, family=binomial)
+summary(glm_fit6)
+blr_rsq_cox_snell(glm_fit6)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit6, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+## Fit 7
+kind of reach to the limit of main effect, include campaign*previous interaction term
+```{r}
+# pday removed
+glm_data7 = glm_data2
+
+# split into test and training dataset
+smp_size = floor(0.75 * nrow(glm_data7))
+set.seed(123)
+train_ind =  sample(seq_len(nrow(glm_data7)), size = smp_size)
+train = glm_data7[train_ind, ]
+test = glm_data7[-train_ind, ]
+
+# fit logistic regression model
+# exlude housing, loan, default, marital
+glm_fit7 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown
+               + campaign*previous,
+          data = train, family=binomial)
+summary(glm_fit7)
+blr_rsq_cox_snell(glm_fit7)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit7, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+Precision = TruePositives / (TruePositives + FalsePositives)
+```
+
+## Fit 8
+```{r}
+glm_fit8 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown
+               + campaign*poutcome_failure + campaign*poutcome_nonexistent +  campaign*poutcome_success,
+          data = train, family=binomial)
+summary(glm_fit8)
+blr_rsq_cox_snell(glm_fit8)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit8, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+## Fit 9
+```{r}
+glm_fit9 = glm(formula = y~. -housing_no - housing_yes - housing_unknown 
+               -loan_no - loan_yes - loan_unknown
+               + previous*poutcome_failure + previous*poutcome_nonexistent +  previous*poutcome_success,
+          data = train, family=binomial)
+summary(glm_fit9)
+blr_rsq_cox_snell(glm_fit9)
+```
+```{r}
+# make prediction on test data, threshold = 0.5
+glm_predict = predict(glm_fit9, newdata = test, type = "response")
+glm_predict = ifelse(glm_predict > 0.5,1,0)
+# create confustion matrix/classification table
+confusionMatrix(data = as.factor(glm_predict) , 
+                reference = as.factor(test$y))
+# generate ROC curve
+glm_preobj = prediction(predictions = glm_predict, labels = test$y)
+glm_perf = performance(glm_preobj, measure = "tpr",x.measure = "fpr")
+plot(glm_perf)
+```
+
+among all the interation terms selections, the first one is useful.

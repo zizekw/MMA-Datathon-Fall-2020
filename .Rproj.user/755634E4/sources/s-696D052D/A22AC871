@@ -1,0 +1,32 @@
+{
+    "id": "A22AC871",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1605280126520.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "expression": "parana_order_items",
+        "caption": "parana_order_items",
+        "totalObservations": 102425,
+        "displayedObservations": 102425,
+        "variables": 12,
+        "cacheKey": "E5BAB1FD",
+        "object": "parana_order_items",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=parana_order_items&cache_key=E5BAB1FD&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 3904937785964127604,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1605280126520,
+    "read_only": false,
+    "read_only_alternatives": []
+}

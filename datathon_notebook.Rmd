@@ -1,0 +1,67 @@
+---
+title: "MMA Datathon"
+author: "Bill Zizek"
+date: "13/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(corrplot)
+```
+
+## Data Ingestion
+
+We're going to read in all our data and make sure the variables are of the correct type - specifically *datetime* is important that it is classified correctly. 
+
+```{r ingest, message=FALSE}
+parana_customers <- read_csv("data/parana_customers.csv")
+parana_orders <- read_csv("data/parana_orders.csv", 
+    col_types = cols(order_purchase_timestamp = col_datetime(format = "%m/%d/%Y %H:%M"), 
+        order_approved_at = col_datetime(format = "%m/%d/%Y %H:%M"), 
+        order_delivered_carrier_date = col_datetime(format = "%m/%d/%Y %H:%M"), 
+        order_delivered_customer_date = col_datetime(format = "%m/%d/%Y %H:%M"), 
+        order_estimated_delivery_date = col_datetime(format = "%m/%d/%Y %H:%M")))
+parana_order_items <- read_csv("data/parana_order_items.csv", 
+    col_types = cols(shipping_limit_date = col_datetime(format = "%m/%d/%Y %H:%M")))
+parana_products <- read_csv("data/parana_products.csv")
+Parana_LP <- read_csv("data/Parana_LP.csv")
+```
+
+## Data Transformation
+
+### Joins
+
+For our modeling, we need to join *all* of the tables together. Starting with the `parana_orders` table, we will join the `parana_customers` table using `customer_id`. Then, we join the `parana_order_items` by `order_id` so that if an order has multiple items - this will be represented by multiple rows (and we can aggregate at a summary level later). Next, we add the `parana_products` table by `product_id` so we can evaluate product characteristics in our model. Finally, we join our logistic partner table `Parana_LP` through equating `State_Served` by LP to where the customer is locatated `customer_state`.
+
+```{r join}
+data_all <- parana_orders %>% 
+  left_join(parana_customers, by = "customer_id") %>%
+  left_join(parana_order_items, by = "order_id") %>% 
+  left_join(parana_products, by = "product_id") %>%
+  left_join(Parana_LP, by = c("customer_state" = "State_Served")) 
+
+# write_csv(x = data_all, path = "C:/Users/willi/OneDrive/Documents/r-projects/MMA_datathon/data/data_all.csv")
+```
+
+### Derived Variables
+
+1. Order Distance
+2. Number of items per order
+3. Dummy variable for late order
+4. Delivery difference
+5. Product volume --> Order volume
+
+## Exploratory Data Analysis
+
+### Colinearity
+
+```{r}
+# now we can create our corrplot
+data_numeric_only <- data_all %>% select_if(is.numeric)
+M <- cor(data_numeric_only, use="pairwise.complete.obs")
+corrplot(M, method = "number", tl.col = "black", type = "upper")
+```
+

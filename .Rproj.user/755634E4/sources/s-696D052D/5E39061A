@@ -1,0 +1,32 @@
+{
+    "id": "5E39061A",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1605280125476.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "expression": "parana_customers",
+        "caption": "parana_customers",
+        "totalObservations": 99441,
+        "displayedObservations": 99441,
+        "variables": 7,
+        "cacheKey": "5B1DAABD",
+        "object": "parana_customers",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=parana_customers&cache_key=5B1DAABD&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7955925832229548576,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1605280125476,
+    "read_only": false,
+    "read_only_alternatives": []
+}
